@@ -1,12 +1,23 @@
 import React, { Component } from 'react';
- import SearchBar from './SearchBar';
+import axios from '../API/Unsplash';
+import SearchBar from './SearchBar';
+import ImageList from './ImageList';
 
 class App extends Component {
 
+    constructor(props) {
+        super(props);
 
-    onSearchSubmit(term) {
+        this.state = { images: [] }
+    }
 
-        console.log(term);
+    onSearchSubmit = async (term) => {
+
+        const response = await axios.get('/search/photos',{
+            params:{query: term},
+        });
+
+        this.setState({ images : response.data.results });
     }
 
     render() {
@@ -14,6 +25,7 @@ class App extends Component {
         return (
             <div className=" ui container " style={{marginTop:'10px'}}>
                 <SearchBar onUserSubmit={this.onSearchSubmit}/>
+                <ImageList images = {this.state.images}/>
             </div>
         )
     }
